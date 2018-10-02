@@ -3,44 +3,118 @@
 """
 import numpy as np 
 
-def elimination(a, b, c, d, e, f, h, g, k): #elements of matrix (3x3)
-    matrix = np.zeros((0,3))
-    matrix = np.concatenate((matrix, [[a, b, c], [d, e, f], [h, g, k]])) 
+def elim(a, b, c, d, e, f, g, h, k): #matrix 3x3 (abc def ghk)
+    matrix = np.zeros((0, 3))
+    matrix = np.concatenate((matrix, [[a, b, c], [d, e, f], [g, h, k]])) 
+
+    elements = a, b, c, d, e, f, g, h, k
+    if elements == 0:
+        assert 'Matirx is full zeros' #if all matrix is zero
+
+    elif a > d and g: 
+        p_d = -(d / a)
+        r_d = p_d * (a) + d 
+        r_e = p_d * (b) + e
+        r_f = p_d * (c) + f
+
+        p_g = -(g / a)
+        r_g = p_g * (a) + g
+        matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+
+        p_re = -(h / r_e)
+        r_h = p_re * (r_e) + h
+        r_k = p_re * (r_f) + k
+
+        matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+        print('1:', a, int(r_e), int(r_k))
+
+    elif a < d and g:
+        p_d = -(d // a)
+        r_d = p_d * (a) + d
+        r_e = p_d * (b) + e
+        r_f = p_d * (c) + f
+
+        p_g = -(g // a)
+        r_g = p_g * (a) + g
+        matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+
+        p_re = -(h // r_e)
+        r_h = p_re * (r_e) + h
+        r_k = p_re * (r_f) + k
+
+        matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+        print('2:', int(a), int(r_e), int(r_k))
     
-    if a == 0: #do row exchange
-        matrix = np.concatenate((matrix, [[d, e, f], [a, b, c], [h, g, k]])) 
-        print(d)
-        if d == 0:
-            matrix = np.concatenate((matrix, [[h, g, k], [d, e, f], [a, b, c]])) #do again row exchange
-            if h == 0: #if have all zeroes in first column
-                print('Matrix is Singular.', 'Look at row 1-column 1, row 2-column 1 and row 3- column 1')
-                print('Right now will be an error. Dont worry.')
-    else: 
-        if a < d and a < h: 
-           result_of_a = -(d // a) #find the multiplier for 2,1 position
-           result_2_of_a = -(h // a) #for 3,1 position
-           
-           zero_d = result_of_a + a #new 2,1 position (zero) 
-           new_e = result_of_a + b #2,2
-           new_f = result_of_a + c #2,3
-           
-           zero_h = result_2_of_a + h #zero (3,1 position) 
-           
-           matrix = np.concatenate((matrix, [[a, b, c], [zero_d, new_e, new_f], [zero_h, g, k]])) #convert the matrix
-           print(a) #print 1 pivot
-    
-    if  new_e == 0: 
-        matrix = np.concatenate((matrix, [[zero_d, new_e, new_f], [a, b, c], [zero_h, g, k]])) 
-        print(h)
-        if b == 0:
-            print('Matrix is Singular.', 'Look at row 1-column 2, row 2-column 2 and row 3- column 2')
-    else:
-        if new_e < g: 
-            result_of_new_e = -(g // new_e)
+    elif a == d or a == g:
+        if a == d:
+            p_d = -(d / a)
+            r_d = p_d * (a) + d
+            r_e = p_d * (b) + e
+            r_f = p_d * (c) + f
+            if a < g:
+                p_g = -(g // a)
+                r_g = p_g * (a) + g
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h // r_e)
+                r_h = p_re * (r_e) + h
+                r_k = p_re * (r_f) + k
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.1:', int(a), int(r_e), int(r_k))
+
+            elif a > g:
+                p_g = -(g / a)
+                r_g = p_g * (a) + g
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h / r_e)
+                r_h = p_re * (r_e) + h
+                r_k = p_re * (r_f) + k
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.2:', int(a), int(r_e), int(r_k))
+            elif a == g:
+                p_g = -(g / a)
+                r_g = p_g * (a) + g
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h / r_e)
+                r_h = p_re * (r_e) + h
+                r_k = p_re * (r_e) + k 
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.3:', int(a), int(r_e), int(r_k))
+        elif a == g:
+            p_g = -(g / a)
+            r_g = p_g * (a) + g
+            if a > d:
+                p_d = -(d // a)
+                r_d = p_d * (a) + d
+                r_e = p_d * (b) + e
+                r_f = p_d * (c) + f
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h / r_e)
+                r_h = p_re * (r_e) + h 
+                r_k = p_re * (r_f) + k
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.4:', int(a), int(r_e), int(r_k))
             
-            new_g = result_of_new_e + new_e
-            new_k = result_of_new_e + new_f
-            
-            matrix = np.concatenate((matrix, [[a, b, c], [zero_d, new_e, new_f], [zero_h, new_g, new_k]])) #convert to the final matrix
-            print('', new_e, ' \n', new_k)
-elimination(0, 3, 0, 0, 7, 0, 0, 7, 1) #for example (output error)
+            elif a < d:
+                p_d = -(d // a)
+                r_d = p_d * (a) + d
+                r_e = p_d * (b) + e
+                r_f = p_d * (c) + f
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h // r_e)
+                r_h = p_re * (r_e) + h
+                r_k = p_re * (r_e) + k
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.5:', int(a), int(r_e), int(r_k))
+            elif a == d:
+                p_d = -(d // a)
+                r_d = p_d * (a) + d
+                r_e = p_d * (b) + e
+                r_f = p_d * (c) + f
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, h, k]]))
+                p_re = -(h / r_e)
+                r_h = p_re * (r_e) + h
+                r_k = p_re * (r_f) + k
+                matrix = np.concatenate((matrix, [[a, b, c], [r_d, r_e, r_f], [r_g, r_h, r_k]]))
+                print('3.6:', int(a), int(r_e), int(r_k))
+           
+elim(2, 1, 0, 0, 1, 2, 2, 2, 1) #output: 2, 1, -3
