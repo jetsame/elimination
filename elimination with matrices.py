@@ -1,6 +1,3 @@
-"""
-//// Rustam Silin//////
-"""
 import numpy as np 
 
 def elim(a, b, c, d, e, f, g, h, k): #matrix 3x3 (abc def ghk)
